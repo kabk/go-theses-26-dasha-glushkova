@@ -1,0 +1,455 @@
+@font-face {
+    font-family: "BradfordLL-Regular";
+    src: url("fonts/BradfordLL-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: "BradfordLL-Italic";
+    src: url("fonts/BradfordLL-Italic.ttf") format("truetype");
+    font-weight: normal;
+    font-style: italic;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    position: relative;
+    background: #000000;
+    color: #000000;
+    font-family: "BradfordLL-Regular", "Times New Roman", serif;
+}
+
+
+.reading-progress {
+    position: fixed;
+    top: auto;
+    left: auto;
+    right: 0;
+    bottom: 0;
+    width: 50%;
+    height: 10px;
+    transform: none;
+    background: #ffffff;
+    z-index: 5;
+}
+
+.reading-progress-fill {
+    width: var(--progress, 0%);
+    height: 100%;
+    background: #6881ff;
+    transition: width 0.1s linear;
+}
+
+.layout {
+    flex: 1;
+    display: flex;
+    min-height: 100vh;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.column-left {
+    flex: 1;
+    background: #ffffff;
+    /* border-right: 2px solid #969896; */
+}
+
+.column-right {
+    flex: 1;
+    background: #fff9e9;
+}
+
+.text-container {
+    flex: 1;
+    min-height: 0;
+    padding: 0 60px 60px 60px;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+}
+
+.text-container::-webkit-scrollbar {
+    display: none;          
+}
+
+.text-container p {
+    margin: 0;
+    font-size: 1.2rem;
+    line-height: 1.4;
+}
+
+.text-container p + p {
+    text-indent: 2em;
+}
+
+em {
+    font-family: "BradfordLL-Italic", "Times New Roman", serif;
+}
+
+.essay-title {
+    flex-shrink: 0;
+    margin: 0;
+    padding: 6px 60px;
+    width: 100%;
+    font-size: 1.2rem;
+    text-align: center;
+    font-weight: normal;
+    background: #dad9eb;
+    border-bottom: 4px double #ca5227;
+}
+
+.essay-section {
+    margin-bottom: 2rem;
+}
+
+.section-heading {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    margin: 0 0 0.25rem;
+    padding-bottom: 0.25rem;
+    font-size: 1.2rem;
+    text-indent: 2em;
+    font-style: italic;
+    font-family: "BradfordLL-Italic", "Times New Roman", serif;
+    font-weight: normal;
+    background: linear-gradient(to bottom, #ffffff 80%, transparent 100%);
+}
+
+.ref {
+    cursor: pointer;
+    color: #4ea1ff;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+}
+
+.ref:hover,
+.ref:focus-visible {
+    text-decoration-style: solid;
+}
+
+.ref-in-view {
+    text-decoration-style: solid;
+}
+
+.column-right .text-container {
+    color: #555756;
+    padding: 0 60px 60px 60px;
+    font-size: 1.2rem;
+    line-height: 1.4;
+}
+.column-right .text-container .active-ref,
+.column-right .text-container p {
+    
+    font-size: 1.2rem;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Image refs: centered with generous padding (matches or exceeds main text) */
+.column-right .text-container img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+    padding: 48px 60px;
+}
+
+@media (max-width: 768px) {
+    .layout {
+        flex-direction: column;
+    }
+
+    .column {
+        height: auto;
+    }
+
+    .column-left,
+    .column-right {
+        flex: unset;
+    }
+
+    .column-left {
+        height: 75vh;
+        border-right: none;
+        border-bottom: 1px solid #d4d4d8;
+    }
+
+    .essay-title {
+        padding: 8px 20px;
+        font-size: 1.2rem;
+    }
+
+    .text-container {
+        padding: 0 20px 60px;
+    }
+
+    .column-right {
+        height: 18vh;
+        min-height: 80px;
+    }
+
+    .column-right .text-container img {
+        display: block;
+        margin: 0 auto;
+        max-width: 100%;
+        height: auto;
+        padding: 24px 34px;
+    }
+
+    .reading-progress {
+        top: auto;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 2px;
+        transform: none;
+    }
+
+    .reading-progress-fill {
+        width: var(--progress, 0%);
+        height: 100%;
+        transition: width 0.1s linear;
+    }
+
+    /* Menu: thin yellow strip at top, expands vertically */
+    .side-menu {
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: auto;
+        width: 100%;
+        height: auto;
+        max-height: 100vh;
+    }
+
+    .side-menu-bar {
+        width: 100%;
+        height: 48px;
+        min-height: 48px;
+        max-height: 48px;
+        transition: max-height 0.35s ease;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    .side-menu.open .side-menu-bar {
+        width: 100%;
+        max-height: min(85vh, 400px);
+        height: auto;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .side-menu.open .side-menu-content {
+        padding: 56px 16px 20px 24px;
+        padding-top: 56px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        flex: 1;
+        min-height: 0;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .side-menu-nav {
+        margin-top: 0;
+    }
+
+    .side-menu-nav li {
+        margin-bottom: 10px;
+    }
+
+    .side-menu-nav .menu-item {
+        font-size: 0.95rem;
+    }
+
+    .side-menu-extra {
+        padding-top: 16px;
+        margin-top: 16px;
+    }
+
+    .side-menu-close {
+        top: 12px;
+        right: 12px;
+        width: 28px;
+        height: 28px;
+        font-size: 1.2rem;
+    }
+
+    .side-menu-vertical-label {
+        font-size: 0.7rem;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: none;
+    }
+
+    .side-menu.open .side-menu-vertical-label {
+        opacity: 1;
+    }
+}
+
+/* Right-side menu: colored bar, expands to show chapters */
+.side-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: auto;
+    height: 100vh;
+    z-index: 20;
+}
+
+.side-menu-bar {
+    height: 100%;
+    width: 56px;
+    background: #aeaeae;
+    border-left: 2px #ca5227 solid;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: width 0.35s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+.side-menu-bar:focus {
+   /* outline: 2px solid #000; */
+    outline-offset: -2px;
+}
+
+.side-menu-vertical-label {
+    position: absolute;
+    top: 24px;
+    left: 51%;
+    transform: translateX(-50%);
+    font-size: 3rem;
+    color: #ffffff;
+    white-space: nowrap;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+
+.side-menu-content {
+    position: relative;
+    width: 100%;
+    min-width: 240px;
+    height: 100%;
+    padding: 24px 20px 32px 36px;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+
+.side-menu.open .side-menu-bar {
+    width: min(200px, 18vw);
+}
+
+.side-menu.open .side-menu-vertical-label {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.side-menu.open .side-menu-content {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+
+.side-menu-close {
+    position: absolute;
+    top: 20px;
+    right: 32px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    background: none;
+    font-size: 1.2rem;
+    line-height: 1;
+    color: #ffffff;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.side-menu-close:hover {
+    opacity: 0.7;
+}
+
+
+.side-menu-nav {
+    flex: 1;
+    margin-top: 48px;
+}
+
+.side-menu-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.side-menu-nav li {
+    margin-bottom: 14px;
+}
+
+.side-menu-nav .menu-item {
+    background: none;
+    border: none;
+    font-family: "BradfordLL-Regular", "Times New Roman", serif;
+    font-size: 1.25rem;
+    cursor: pointer;
+    text-align: left;
+    color: #ffffff;
+    padding: 0;
+}
+
+.side-menu-nav .menu-item:hover {
+    text-decoration: underline;
+}
+
+.side-menu-extra {
+    margin-top: auto;
+    padding-top: 24px;
+   /* border-top: 1px solid rgba(255, 255, 255, 0.5); */
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.side-menu-link {
+    font-size: 0.85rem;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.side-menu-link:hover {
+    text-decoration: underline;
+}
