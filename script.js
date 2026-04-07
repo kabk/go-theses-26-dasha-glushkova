@@ -109,6 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // show one note (or none)
     function setActiveNote(id) {
         if (!id) {
+            lastIoNoteId = null;
             clearNotes();
             return;
         }
@@ -123,8 +124,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const target = document.querySelector(`.note[data-note-id="${id}"]`);
         if (target?.classList.contains("is-on")) {
             target.classList.remove("is-on");
+            lastIoNoteId = null;
             return;
         }
+        lastIoNoteId = id;
         setActiveNote(id);
     }
 
@@ -147,31 +150,64 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // desktop: pick the note whose link has the strongest intersection with the scroll root
+    // desktop: IO-driven ref — sticky forward: keep showing a note until a later citation is visible or user clicks
     let noteIo = null;
     const noteRatios = new Map();
     let pickRaf = null;
+    let lastIoNoteId = null;
+
+    function pickBestAmong(entries) {
+        let best = entries[0];
+        for (const x of entries) {
+            if (x.r > best.r + 1e-6) best = x;
+            else if (Math.abs(x.r - best.r) <= 1e-6 && x.i > best.i) best = x;
+        }
+        return best;
+    }
 
     function pickNote() {
         if (mobile()) return;
-        if (noteRatios.size === 0) {
-            clearNotes();
+
+        const links = Array.from(noteLinks);
+        const visible = [];
+        for (let i = 0; i < links.length; i++) {
+            const r = noteRatios.get(links[i]);
+            if (r != null && r > 0) visible.push({ link: links[i], i, r });
+        }
+
+        if (visible.length === 0) {
+            if (lastIoNoteId) setActiveNote(lastIoNoteId);
+            else {
+                lastIoNoteId = null;
+                clearNotes();
+            }
             return;
         }
-        let best = null;
-        let bestR = -1;
-        for (const link of noteLinks) {
-            const r = noteRatios.get(link);
-            if (r == null || r <= 0) continue;
-            if (r > bestR + 1e-6) {
-                bestR = r;
-                best = link;
-            } else if (Math.abs(r - bestR) <= 1e-6 && best != null) {
-                if (link.compareDocumentPosition(best) & Node.DOCUMENT_POSITION_FOLLOWING) best = link;
-            }
+
+        if (!lastIoNoteId) {
+            const chosen = pickBestAmong(visible);
+            lastIoNoteId = chosen.link.dataset.noteTarget;
+            setActiveNote(lastIoNoteId);
+            return;
         }
-        if (best?.dataset?.noteTarget) setActiveNote(best.dataset.noteTarget);
-        else clearNotes();
+
+        const anchorIdx = links.findIndex((l) => l.dataset.noteTarget === lastIoNoteId);
+        if (anchorIdx < 0) {
+            const chosen = pickBestAmong(visible);
+            lastIoNoteId = chosen.link.dataset.noteTarget;
+            setActiveNote(lastIoNoteId);
+            return;
+        }
+
+        const afterAnchor = visible.filter((x) => x.i > anchorIdx);
+        if (afterAnchor.length > 0) {
+            const chosen = pickBestAmong(afterAnchor);
+            lastIoNoteId = chosen.link.dataset.noteTarget;
+            setActiveNote(lastIoNoteId);
+            return;
+        }
+
+        setActiveNote(lastIoNoteId);
     }
 
     // coalesce IO callbacks to one pick per frame (avoids flicker)
@@ -189,6 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
         noteIo?.disconnect();
         noteIo = null;
         noteRatios.clear();
+        lastIoNoteId = null;
     }
 
     // observe .note-link elements in the essay column; ratios feed pickNote → setActiveNote
@@ -265,7 +302,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (menuPanel) menuPanel.hidden = open;
     });
 
-    // “essay” accordion in the nav (pt1–pt4 / thank you)
+    // “essay” accordion in the nav (numbered items / thank you)
     function showChapters() {
         if (!chaptersEl || !chaptersEl.hidden) return;
         unlocked = 0;
@@ -285,7 +322,7 @@ document.addEventListener("DOMContentLoaded", () => {
         syncNav();
     }
 
-    // helpers for nav clicks (Abstract / Sources close the pt1–pt4 list)
+    // helpers for nav clicks (Abstract / Sources close the essay submenu)
     const collapseEssaySubmenu = () => {
         if (menuPanel) menuPanel.hidden = true;
         menuToggle?.setAttribute("aria-expanded", "false");
