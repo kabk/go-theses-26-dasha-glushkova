@@ -796,11 +796,11 @@ hr.letter-header-rule {
         --rule-inset: 12px;
         position: relative;
         display: grid;
-        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr);
         align-items: center;
-        column-gap: 0.2rem;
+        column-gap: 0;
         row-gap: 0.35rem;
-        padding: 0.75rem var(--pad-x-m) 0.85rem calc(var(--pad-x-m) + var(--letter-shift));
+        padding: 0.55rem var(--pad-x-m) 0.75rem calc(var(--pad-x-m) + var(--letter-shift));
         border-bottom: none;
     }
 
@@ -860,8 +860,9 @@ hr.letter-header-rule {
         top: 0;
         z-index: 5;
         margin: 0 calc(-1 * var(--pad-x-m));
-        padding: 0.65rem var(--pad-x-m) 0;
+        padding: 0.55rem var(--pad-x-m) 0;
         min-width: 0;
+        max-width: 100%;
         box-sizing: border-box;
     }
 
@@ -872,6 +873,9 @@ hr.letter-header-rule {
         max-width: 100%;
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         column-gap: 1rem;
+        font-size: calc(var(--microtype) * 0.82);
+        line-height: 1.12;
+        letter-spacing: 0.015em;
     }
 
     .letter-header-row > * {
@@ -880,6 +884,12 @@ hr.letter-header-rule {
 
     .letter-header-stack {
         padding-left: 0;
+        gap: 0.5rem;
+        min-width: 0;
+    }
+
+    .letter-header-pair {
+        min-width: 0;
     }
 
     .letter-header-stack .letter-header-pair {
@@ -896,13 +906,27 @@ hr.letter-header-rule {
         z-index: 5;
         margin: 0 calc(-1 * var(--pad-x-m));
         padding: 0 var(--pad-x-m) 1rem;
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
     }
 
     .footer .letter-header-rule { margin-bottom: 0.75rem; }
 
     .footer-content {
         margin-left: var(--letter-shift);
-        gap: 1rem;
+        min-width: 0;
+        max-width: 100%;
+        /* Match .letter-header-row column split so Signed | Date lines up with From | To/Subject */
+        column-gap: 1rem;
+        row-gap: 0.85rem;
+        font-size: calc(var(--microtype) * 0.82);
+        line-height: 1.12;
+        letter-spacing: 0.015em;
+    }
+
+    .footer-content > * {
+        min-width: 0;
     }
 
     .footer-content > .letter-header-pair:last-child {
@@ -910,12 +934,19 @@ hr.letter-header-rule {
         grid-template-columns: minmax(3.25em, max-content) minmax(0, 1fr);
     }
 
-    .nav-title {
+    .footer .letter-header-value {
+        overflow-wrap: break-word;
+    }
+
+    .footer .letter-header-value.is-plain img {
+        max-height: 2.5rem;
+        max-width: 100%;
         width: auto;
-        margin: 0;
-        grid-column: 1;
-        grid-row: 1;
-        align-self: center;
+    }
+
+    /* Nav still has aria-label="Contents" on <nav> */
+    .nav-title {
+        display: none;
     }
 
     .nav-list {
@@ -929,7 +960,7 @@ hr.letter-header-rule {
         min-width: 0;
         margin: 0;
         padding: 0;
-        grid-column: 2;
+        grid-column: 1;
         grid-row: 1;
     }
 
