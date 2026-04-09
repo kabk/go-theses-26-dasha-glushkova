@@ -124,10 +124,12 @@ span.hyphenate-off {
 /* ——— Navigation column ——— */
 .column-navigation {
     position: relative;
-    z-index: 0;
+    /* Above .column-main so nothing from the essay column paints over the menu (e.g. broken <img>) */
+    z-index: 2;
     background: var(--background);
     border-right: var(--border-vertical);
     padding: 1rem 0.5rem 1.25rem;
+    overflow-x: hidden;
     overflow-y: auto;
     line-height: var(--nav-line-height);
 }
@@ -197,7 +199,7 @@ span.hyphenate-off {
 /* ——— References column (desktop footnotes) ——— */
 .column-references {
     position: relative;
-    z-index: 0;
+    z-index: 1;
     background: var(--refs-panel);
     border-right: var(--border-vertical);
     min-height: 0;
@@ -334,7 +336,7 @@ span.hyphenate-off {
 /* ——— Main column: shell, scroll, prose ——— */
 .column-main {
     position: relative;
-    z-index: 1;
+    z-index: 0;
     background: var(--background);
     min-height: 0;
 }
