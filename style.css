@@ -29,13 +29,13 @@
     --microtype-letter-spacing: 0.02em;
     --body: 1.3rem;
     --body-line-height: 1.45;
-    --pull-quote-line-height: 1.22;
+    --pull-quote-line-height: 1.2;
     --note-quote-scale: 0.8;
     --note-quote-line-height: 1.4;
     --note-figure-margin-top: 0.5rem;
     --abstract: 1rem;
     --side: 0.8rem;
-    --side-line-height: 1.4;
+    --side-line-height: 1.3;
     --body-inset: 2.65rem;
     --pad-x: 30px;
     --pad-x-m: 16px;
@@ -50,18 +50,17 @@
     /* Vertical upright titles: Safari mostly uses letter-spacing along the stack, not line-height */
     --ch-head-stack-gap: 0.32em;
     --ch-head-line-height: 2;
-    /* Nudge vertical chapter titles toward the right (main column rail) */
-    --ch-head-shift: 0.35rem;
     --accent: #e9008d;
-    --ink: #000000;
-    --paper: #ffffff;
+    --foreground: #000000;
+    --background: #ffffff;
     --refs-panel: #f0f0f0;
-    --border-line: 1px solid var(--ink);
-    --border-vertical: 1px dotted var(--ink);
+    --border-line: 1px solid var(--foreground);
+    --border-vertical: 1px dotted var(--foreground);
     --font-body: "Kommuna Normal", "Times New Roman", Times, serif;
     --font-ref: "National Park", "Kommuna Normal", "Times New Roman", Times, serif;
 }
 
+/* ——— Base & reset ——— */
 *, *::before, *::after { box-sizing: border-box; }
 
 html, body { margin: 0; padding: 0; height: 100%; }
@@ -69,14 +68,20 @@ html, body { margin: 0; padding: 0; height: 100%; }
 body {
     min-height: 100vh;
     overflow: hidden;
-    background: var(--paper);
-    color: var(--ink);
+    background: var(--background);
+    color: var(--foreground);
     font-family: var(--font-body);
 }
 
 em { font-family: inherit; font-style: normal; }
 
-/* ——— layout: progress | nav | refs | main ——— */
+/* set by script: words that start with A–Z / all-caps runs — no automatic hyphenation */
+span.hyphenate-off {
+    hyphens: none;
+    -webkit-hyphens: none;
+}
+
+/* ——— App layout: progress | nav | refs | main ——— */
 .layout {
     display: grid;
     grid-template-columns: var(--progress-w) minmax(8.75rem, 10.75rem) minmax(14rem, 22vw) minmax(0, 1fr);
@@ -94,8 +99,9 @@ em { font-family: inherit; font-style: normal; }
     min-height: 0;
 }
 
-.column-progress { background: color-mix(in srgb, var(--ink) 8%, var(--paper)); }
+.column-progress { background: color-mix(in srgb, var(--foreground) 8%, var(--background)); }
 
+/* ——— Progress column ——— */
 .progress {
     flex: 1;
     min-height: 0;
@@ -115,22 +121,15 @@ em { font-family: inherit; font-style: normal; }
 .column-navigation,
 .column-references { flex: 1; min-height: 0; }
 
+/* ——— Navigation column ——— */
 .column-navigation {
     position: relative;
     z-index: 0;
-    background: var(--paper);
+    background: var(--background);
     border-right: var(--border-vertical);
     padding: 1rem 0.5rem 1.25rem;
     overflow-y: auto;
     line-height: var(--nav-line-height);
-}
-
-.nav-worm {
-    display: block;
-    width: 5.25rem;
-    max-width: 100%;
-    height: auto;
-    margin: 0 auto 0.65rem;
 }
 
 .nav-title {
@@ -157,7 +156,7 @@ em { font-family: inherit; font-style: normal; }
     padding: 0.2rem 0;
     border: none;
     background: none;
-    color: var(--ink);
+    color: var(--foreground);
     font: inherit;
     font-size: var(--microtype);
     line-height: var(--nav-line-height);
@@ -169,7 +168,7 @@ em { font-family: inherit; font-style: normal; }
 
 .nav-btn.is-sub {
     font-size: max(0.58rem, calc(var(--microtype) * 0.92));
-    color: color-mix(in srgb, var(--ink) 72%, var(--paper));
+    color: color-mix(in srgb, var(--foreground) 72%, var(--background));
 }
 
 .nav-btn:hover:not(:disabled),
@@ -195,6 +194,7 @@ em { font-family: inherit; font-style: normal; }
 
 .nav-sub li { margin-bottom: 0.1rem; }
 
+/* ——— References column (desktop footnotes) ——— */
 .column-references {
     position: relative;
     z-index: 0;
@@ -211,7 +211,6 @@ em { font-family: inherit; font-style: normal; }
     overflow-y: auto;
     overflow-x: hidden;
     scroll-behavior: auto;
-    scrollbar-width: none;
 }
 
 .refs-text,
@@ -239,6 +238,7 @@ em { font-family: inherit; font-style: normal; }
 .prose::-webkit-scrollbar,
 .scroll::-webkit-scrollbar { display: none; }
 
+.refs-wrap,
 .scroll { scrollbar-width: none; }
 
 .note { display: none; }
@@ -262,12 +262,12 @@ em { font-family: inherit; font-style: normal; }
 .refs-pics :is(.active-ref, p) {
     font-size: inherit;
     line-height: inherit;
-    color: var(--ink);
+    color: var(--foreground);
 }
 
-.refs-pics img { background: var(--paper); }
+.refs-pics img { background: var(--background); }
 
-/* blockquotes: refs column + mobile notes in main */
+/* ——— Blockquotes: refs column + mobile notes in main ——— */
 .refs-text .ref-quote,
 .column-main .note .ref-quote {
     position: relative;
@@ -277,7 +277,7 @@ em { font-family: inherit; font-style: normal; }
     font-style: normal;
 }
 
-.refs-text .ref-quote { font-family: var(--font-body); color: var(--ink); }
+.refs-text .ref-quote { font-family: var(--font-body); color: var(--foreground); }
 
 .column-main .note .ref-quote { font-family: var(--font-ref); }
 
@@ -310,7 +310,7 @@ em { font-family: inherit; font-style: normal; }
     font-weight: 400;
 }
 
-.refs-text .ref-cite { font-family: var(--font-body); color: var(--ink); }
+.refs-text .ref-cite { font-family: var(--font-body); color: var(--foreground); }
 .column-main .note .ref-cite { font-family: var(--font-ref); }
 
 .refs-pics .ref-fig,
@@ -328,14 +328,14 @@ em { font-family: inherit; font-style: normal; }
     font-weight: 400;
 }
 
-.refs-pics .ref-cap { font-family: var(--font-body); color: var(--ink); }
+.refs-pics .ref-cap { font-family: var(--font-body); color: var(--foreground); }
 .column-main .note .ref-cap { font-family: var(--font-ref); }
 
-/* ——— main column ——— */
+/* ——— Main column: shell, scroll, prose ——— */
 .column-main {
     position: relative;
     z-index: 1;
-    background: var(--paper);
+    background: var(--background);
     min-height: 0;
 }
 
@@ -355,7 +355,6 @@ em { font-family: inherit; font-style: normal; }
     min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
-    margin-top: 0;
     padding-top: 0.45rem;
 }
 
@@ -376,28 +375,47 @@ em { font-family: inherit; font-style: normal; }
     text-indent: 0;
 }
 
-.column-main .scroll .chapter > p.pull-quote {
+/* Pull-quote + attribution share layout; p.quote-attrib is separate so mobile .note insertion doesn’t break styling */
+.column-main .scroll .chapter > p.pull-quote,
+.column-main .scroll .chapter > p.quote-attrib {
     text-align: center;
     text-indent: 0;
     max-width: 100%;
-    margin-inline: auto;
-    margin-block: 1.35em;
     padding-inline: 0.75rem;
     box-sizing: border-box;
     color: var(--accent);
     hyphens: none;
+}
+
+.column-main .scroll .chapter > p.pull-quote {
+    margin-inline: auto;
+    margin-block: 1.35em;
     line-height: var(--pull-quote-line-height);
+}
+
+.column-main .scroll .chapter > p.quote-attrib {
+    margin: 0 auto 1.35em;
+    font-family: var(--font-ref);
+    font-size: calc(var(--body) * var(--note-quote-scale));
+    line-height: var(--note-quote-line-height);
+    font-style: normal;
+    font-weight: 400;
+}
+
+.column-main .scroll .chapter > p.pull-quote:has(+ p.quote-attrib) {
+    margin-bottom: 0.4em;
 }
 
 .prose p + p { text-indent: 2em; }
 
 .column-main .scroll a:any-link {
-    color: var(--ink);
+    color: var(--foreground);
     font-family: var(--font-body);
     font-style: italic;
     text-underline-offset: 0.12em;
 }
 
+/* ——— Abstract & section-specific copy (#intro, #sources, #contacts) ——— */
 .abstract[hidden] { display: none !important; }
 
 .abstract {
@@ -415,13 +433,40 @@ em { font-family: inherit; font-style: normal; }
     min-width: 0;
 }
 
+.abstract #intro > :is(p, .ch-next) { grid-column: 1; }
+
 .abstract #intro > p {
-    grid-column: 1;
     margin: 0;
     max-width: 40rem;
 }
 
-.abstract #intro > .ch-next { grid-column: 1; }
+/* Match in-text pull quotes: .note-link uses --note-quote-scale + --note-quote-line-height */
+.abstract #intro > .statement-of-originality {
+    grid-column: 1;
+    width: 100%;
+    max-width: 40rem;
+    margin-inline: 0;
+    margin-top: 2rem;
+    box-sizing: border-box;
+    color: var(--accent);
+    font-family: var(--font-body);
+    font-size: calc(var(--abstract) * var(--note-quote-scale));
+    line-height: var(--note-quote-line-height);
+}
+
+.abstract #intro .statement-of-originality p {
+    text-align: center;
+    text-indent: 0;
+    hyphens: none;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.abstract #intro .statement-of-originality__title {
+    margin-bottom: 0.85em;
+}
 
 #intro { padding-top: 0; }
 
@@ -442,7 +487,10 @@ em { font-family: inherit; font-style: normal; }
     list-style-position: outside;
 }
 
-#contacts .thank-you-friends { text-indent: 0; }
+#contacts .thank-you-friends {
+    text-indent: 0;
+    hyphens: none;
+}
 
 #sources .sources-list li {
     margin: 0;
@@ -457,13 +505,18 @@ em { font-family: inherit; font-style: normal; }
     font-size: var(--abstract);
 }
 
+/* ——— Letter header & footer ——— */
+.letter-header,
+.footer {
+    flex-shrink: 0;
+    z-index: 3;
+    margin: 0 calc(-1 * var(--pad-x));
+    background: var(--background);
+}
+
 .letter-header {
     position: relative;
-    z-index: 3;
-    flex-shrink: 0;
-    margin: 0 calc(-1 * var(--pad-x));
     padding: 0.75rem var(--pad-x) 0;
-    background: var(--paper);
 }
 
 .letter-header-row {
@@ -533,17 +586,10 @@ hr.letter-header-rule {
 }
 
 .footer {
-    flex-shrink: 0;
-    z-index: 3;
-    margin: 0 calc(-1 * var(--pad-x));
     padding: 0 var(--pad-x) 1rem;
-    background: var(--paper);
 }
 
-.footer .letter-header-rule {
-    margin: 0 var(--rule-inset) 0.85rem;
-    border-top: var(--border-line);
-}
+.footer .letter-header-rule { margin: 0 var(--rule-inset) 0.85rem; }
 
 .footer-content {
     display: grid;
@@ -569,7 +615,7 @@ hr.letter-header-rule {
     object-fit: contain;
 }
 
-/* chapters + abstract intro grid */
+/* ——— Chapters + abstract intro grid ——— */
 #chapters .chapter,
 .abstract #intro {
     display: grid;
@@ -591,7 +637,6 @@ hr.letter-header-rule {
     z-index: 2;
     margin: 0;
     padding: 0;
-    transform: translateX(var(--ch-head-shift));
     box-sizing: border-box;
     width: 100%;
     max-width: 100%;
@@ -605,7 +650,7 @@ hr.letter-header-rule {
     font-weight: 400;
     text-transform: uppercase;
     background: transparent;
-    color: var(--ink);
+    color: var(--foreground);
 }
 
 #chapters .chapter > *:not(.ch-head) { grid-column: 1; }
@@ -630,7 +675,7 @@ hr.letter-header-rule {
     padding: 0;
     border: none;
     background: none;
-    color: var(--ink);
+    color: var(--foreground);
     font-family: var(--font-body);
     font-size: var(--microtype);
     font-weight: 400;
@@ -666,6 +711,7 @@ hr.letter-header-rule {
 .chapter.locked,
 .chapter.off { display: none !important; }
 
+/* ——— Vertical chapter titles (shared .ch-head base) ——— */
 .ch-head {
     margin: 0;
     padding: 10px 0 0 0;
@@ -675,9 +721,10 @@ hr.letter-header-rule {
     text-transform: uppercase;
     letter-spacing: 0.32em;
     background: transparent;
-    color: var(--ink);
+    color: var(--foreground);
 }
 
+/* ——— In-text citations (.note-link) ——— */
 .note-link {
     cursor: pointer;
     font-family: var(--font-body);
@@ -698,6 +745,7 @@ hr.letter-header-rule {
 .note-link:hover,
 .note-link:focus-visible { text-decoration-style: solid; }
 
+/* ——— Wider breakpoints ——— */
 @media (min-width: 901px) {
     #chapters .chapter,
     .abstract #intro { column-gap: 2.45rem; }
@@ -705,6 +753,7 @@ hr.letter-header-rule {
     .column-navigation { margin-left: 0.85rem; }
 }
 
+/* ——— Mobile / narrow ——— */
 @media (max-width: 900px) {
     html, body { height: auto; min-height: 100%; }
     body { overflow-x: hidden; overflow-y: auto; }
@@ -715,7 +764,7 @@ hr.letter-header-rule {
         width: 100%;
         min-height: 100vh;
         min-height: 100dvh;
-        --letter-shift: 0.5rem;
+        --letter-shift: 0.85rem;
     }
 
     .column-progress {
@@ -736,8 +785,6 @@ hr.letter-header-rule {
         width: 0;
     }
 
-    .column-main { order: 1; }
-
     .column-navigation {
         order: 2;
         width: 100%;
@@ -745,14 +792,13 @@ hr.letter-header-rule {
         min-height: 0;
         border-right: none;
         --rule-inset: 12px;
-        --nav-font: 10px;
         position: relative;
         display: grid;
-        grid-template-columns: minmax(0, 1fr);
+        grid-template-columns: auto minmax(0, 1fr);
         align-items: center;
-        column-gap: 0;
-        row-gap: 0.28rem;
-        padding: 0.5rem var(--pad-x-m) 0.6rem calc(var(--pad-x-m) + var(--letter-shift));
+        column-gap: 0.2rem;
+        row-gap: 0.35rem;
+        padding: 0.75rem var(--pad-x-m) 0.85rem calc(var(--pad-x-m) + var(--letter-shift));
         border-bottom: none;
     }
 
@@ -777,6 +823,7 @@ hr.letter-header-rule {
     }
 
     .column-main {
+        order: 1;
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -786,7 +833,7 @@ hr.letter-header-rule {
         --progress-h: 6px;
         --body: 1.16rem;
         --abstract: 1.06rem;
-        --body-inset: 0.55rem;
+        --body-inset: 1.4rem;
     }
 
     .column-main-inner {
@@ -795,7 +842,7 @@ hr.letter-header-rule {
         overflow-y: auto;
         overflow-x: hidden;
         /* Slightly narrower side padding than nav — widens letter + essay column only */
-        --pad-x-m: 6px;
+        --pad-x-m: 12px;
         padding: 0 var(--pad-x-m) env(safe-area-inset-bottom, 0);
         --rule-inset: 18px;
     }
@@ -822,7 +869,7 @@ hr.letter-header-rule {
         min-width: 0;
         max-width: 100%;
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        column-gap: 0.65rem;
+        column-gap: 1rem;
     }
 
     .letter-header-row > * {
@@ -831,52 +878,14 @@ hr.letter-header-rule {
 
     .letter-header-stack {
         padding-left: 0;
-        gap: 0.65rem;
     }
 
     .letter-header-stack .letter-header-pair {
-        grid-template-columns: minmax(2.15em, max-content) minmax(0, 1fr);
-    }
-
-    /* Tighter label ↔ value gap; narrower label column frees space for values */
-    .letter-header .letter-header-pair {
-        column-gap: 0.2rem;
-        grid-template-columns: minmax(2.15em, max-content) minmax(0, 1fr);
+        grid-template-columns: minmax(3.25em, max-content) minmax(0, 1fr);
     }
 
     .letter-header .letter-header-value {
         overflow-wrap: break-word;
-    }
-
-
-    .letter-header .letter-header-value a:any-link {
-        white-space: nowrap;
-        letter-spacing: 0.015em;
-    }
-    .letter-header .letter-header-row,
-    .footer .footer-content {
-        font-size: max(0.5rem, calc(var(--microtype) * 0.72));
-        line-height: 1.05;
-        column-gap: 0.65rem;
-        row-gap: 0.65rem;
-    }
-
-    .footer .footer-content {
-        grid-template-columns: auto minmax(0, 1fr);
-        justify-items: start;
-    }
-
-    .footer .footer-content > .letter-header-pair {
-        grid-template-columns: minmax(2.15em, max-content) minmax(0, 1fr);
-        column-gap: 0.2rem;
-    }
-
-    .footer .footer-content > .letter-header-pair:last-child {
-        padding-left: 0;
-    }
-
-    .footer .letter-header-value.is-plain img {
-        max-width: min(9rem, 100%);
     }
 
     .footer {
@@ -889,13 +898,22 @@ hr.letter-header-rule {
 
     .footer .letter-header-rule { margin-bottom: 0.75rem; }
 
-    .footer-content { margin-left: var(--letter-shift); }
+    .footer-content {
+        margin-left: var(--letter-shift);
+        gap: 1rem;
+    }
 
-    .nav-worm { display: none; }
+    .footer-content > .letter-header-pair:last-child {
+        padding-left: 0;
+        grid-template-columns: minmax(3.25em, max-content) minmax(0, 1fr);
+    }
 
-
-    .column-navigation .nav-title {
-        display: none;
+    .nav-title {
+        width: auto;
+        margin: 0;
+        grid-column: 1;
+        grid-row: 1;
+        align-self: center;
     }
 
     .nav-list {
@@ -904,12 +922,12 @@ hr.letter-header-rule {
         flex-wrap: wrap;
         justify-content: flex-start;
         align-items: center;
-        gap: 0.18rem 0.28rem;
+        gap: 0.25rem 0.45rem;
         width: 100%;
         min-width: 0;
         margin: 0;
         padding: 0;
-        grid-column: 1;
+        grid-column: 2;
         grid-row: 1;
     }
 
@@ -922,39 +940,8 @@ hr.letter-header-rule {
         flex-direction: row;
         flex-wrap: wrap;
         align-items: center;
-        gap: 0.18rem 0.3rem;
+        gap: 0.25rem 0.5rem;
         min-width: 0;
-    }
-
-    .nav-sub:not([hidden]) {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 0.15rem 0.28rem;
-        margin: 0;
-        padding: 0;
-    }
-
-    /* Explicit px + full font reset — base `font: inherit` was fighting rem-based sizes */
-    .column-navigation .nav-btn,
-    .column-navigation .nav-toggle {
-        font-family: var(--font-body);
-        font-size: var(--nav-font);
-        font-weight: 400;
-        font-style: normal;
-        line-height: 1.2;
-        letter-spacing: var(--microtype-letter-spacing);
-    }
-
-    .nav-btn {
-        width: auto;
-        white-space: nowrap;
-        padding: 0.15rem 0;
-    }
-
-    .column-navigation .nav-btn.is-sub {
-        font-size: 9px;
     }
 
     .nav-toggle {
@@ -962,57 +949,37 @@ hr.letter-header-rule {
         white-space: nowrap;
     }
 
+    .nav-sub:not([hidden]) {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.2rem 0.45rem;
+        margin: 0;
+        padding: 0;
+    }
+
+    .nav-btn {
+        width: auto;
+        white-space: nowrap;
+        font-size: max(0.58rem, var(--microtype));
+        padding: 0.28rem 0;
+    }
+
     #chapters .chapter,
     .abstract #intro {
-        grid-template-columns: minmax(0, 1fr) !important;
-        column-gap: 0;
-    }
-
-    #chapters .chapter > .ch-head,
-    .abstract #intro .ch-head,
-    #chapters .chapter > h2.ch-head,
-    .abstract #intro > h2.ch-head {
-        grid-column: 1 / -1;
-        grid-row: auto;
-        justify-self: stretch;
-        align-self: start;
-        position: static;
-        z-index: auto;
-        transform: none;
-        box-sizing: border-box;
-        width: 100%;
-        max-width: none;
-        -webkit-writing-mode: horizontal-tb;
-        writing-mode: horizontal-tb !important;
-        text-orientation: mixed !important;
-        line-height: var(--microtype-line-height);
-        letter-spacing: 0.1em;
-        word-spacing: normal;
-        text-align: center;
-        padding: 0 0 0.5rem;
-        margin: 0 0 0.35rem;
-    }
-
-    .ch-next {
-        width: 100%;
-        margin-right: 0;
-    }
-
-    #intro p {
-        font-size: calc(var(--abstract) * 0.92);
-        line-height: 1.32;
+        --ch-head-rail: 2.2rem;
+        column-gap: 0.9rem;
     }
 
     .column-main .note {
         margin: 0.85rem 0;
-        margin-left: 0;
-        margin-right: 0;
         padding: 0;
         background: transparent;
         font-family: var(--font-body);
         font-size: calc(var(--body) * var(--note-quote-scale));
-        line-height: var(--pull-quote-line-height);
-        color: var(--ink);
+        line-height: var(--note-quote-line-height);
+        color: var(--foreground);
         position: relative;
         width: 100%;
         max-width: 100%;
@@ -1027,29 +994,14 @@ hr.letter-header-rule {
     #chapters .chapter > .note { grid-column: 1; }
 
     .column-main .note .ref-quote,
+    .column-main .note .ref-quote::before,
     .column-main .note .ref-cite,
     .column-main .note .ref-cap { font-family: var(--font-body); }
-
-    .column-main .note .ref-quote {
-        padding-left: 1.2em;
-    }
-
-    .column-main .note .ref-quote::before {
-        font-family: var(--font-body);
-        font-size: 1.65em;
-        line-height: 1;
-        top: 0;
-    }
 
     .column-main .note a:any-link {
         font-family: var(--font-body);
         font-style: normal;
     }
 
-    .column-main .note img {
-        width: 100%;
-        max-width: 100%;
-        height: auto;
-        background: var(--paper);
-    }
+    .column-main .note img { background: var(--background); }
 }
