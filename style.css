@@ -745,14 +745,14 @@ hr.letter-header-rule {
         min-height: 0;
         border-right: none;
         --rule-inset: 12px;
-        --nav-font: max(0.45rem, calc(var(--microtype) * 0.62));
+        --nav-font: 10px;
         position: relative;
         display: grid;
-        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr);
         align-items: center;
-        column-gap: 0.2rem;
+        column-gap: 0;
         row-gap: 0.28rem;
-        padding: 0.55rem var(--pad-x-m) 0.65rem calc(var(--pad-x-m) + var(--letter-shift));
+        padding: 0.5rem var(--pad-x-m) 0.6rem calc(var(--pad-x-m) + var(--letter-shift));
         border-bottom: none;
     }
 
@@ -861,6 +861,11 @@ hr.letter-header-rule {
         row-gap: 0.65rem;
     }
 
+    .footer .footer-content {
+        grid-template-columns: auto minmax(0, 1fr);
+        justify-items: start;
+    }
+
     .footer .footer-content > .letter-header-pair {
         grid-template-columns: minmax(2.15em, max-content) minmax(0, 1fr);
         column-gap: 0.2rem;
@@ -868,6 +873,10 @@ hr.letter-header-rule {
 
     .footer .footer-content > .letter-header-pair:last-child {
         padding-left: 0;
+    }
+
+    .footer .letter-header-value.is-plain img {
+        max-width: min(9rem, 100%);
     }
 
     .footer {
@@ -884,12 +893,9 @@ hr.letter-header-rule {
 
     .nav-worm { display: none; }
 
-    .nav-title {
-        width: auto;
-        margin: 0;
-        grid-column: 1;
-        grid-row: 1;
-        align-self: center;
+
+    .column-navigation .nav-title {
+        display: none;
     }
 
     .nav-list {
@@ -903,7 +909,7 @@ hr.letter-header-rule {
         min-width: 0;
         margin: 0;
         padding: 0;
-        grid-column: 2;
+        grid-column: 1;
         grid-row: 1;
     }
 
@@ -930,25 +936,30 @@ hr.letter-header-rule {
         padding: 0;
     }
 
-    .column-navigation .nav-title {
+    /* Explicit px + full font reset — base `font: inherit` was fighting rem-based sizes */
+    .column-navigation .nav-btn,
+    .column-navigation .nav-toggle {
+        font-family: var(--font-body);
         font-size: var(--nav-font);
+        font-weight: 400;
+        font-style: normal;
+        line-height: 1.2;
+        letter-spacing: var(--microtype-letter-spacing);
     }
 
     .nav-btn {
         width: auto;
         white-space: nowrap;
-        font-size: var(--nav-font);
-        padding: 0.2rem 0;
+        padding: 0.15rem 0;
     }
 
     .column-navigation .nav-btn.is-sub {
-        font-size: max(0.4rem, calc(var(--nav-font) * 0.9));
+        font-size: 9px;
     }
 
     .nav-toggle {
         width: auto;
         white-space: nowrap;
-        font-size: var(--nav-font);
     }
 
     #chapters .chapter,
@@ -1000,7 +1011,7 @@ hr.letter-header-rule {
         background: transparent;
         font-family: var(--font-body);
         font-size: calc(var(--body) * var(--note-quote-scale));
-        line-height: var(--note-quote-line-height);
+        line-height: var(--pull-quote-line-height);
         color: var(--ink);
         position: relative;
         width: 100%;
@@ -1016,9 +1027,19 @@ hr.letter-header-rule {
     #chapters .chapter > .note { grid-column: 1; }
 
     .column-main .note .ref-quote,
-    .column-main .note .ref-quote::before,
     .column-main .note .ref-cite,
     .column-main .note .ref-cap { font-family: var(--font-body); }
+
+    .column-main .note .ref-quote {
+        padding-left: 1.2em;
+    }
+
+    .column-main .note .ref-quote::before {
+        font-family: var(--font-body);
+        font-size: 1.65em;
+        line-height: 1;
+        top: 0;
+    }
 
     .column-main .note a:any-link {
         font-family: var(--font-body);
