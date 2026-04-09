@@ -1,8 +1,9 @@
-// reading progress, chapter unlock/nav, footnotes 
+// Essay UI: reading progress, linear chapter unlock/nav, footnotes (desktop IO + mobile inline),
+// and typography passes (short-word ties + capital-word hyphen guard).
 document.addEventListener("DOMContentLoaded", () => {
+    /* ——— Viewport & scroll roots ——— */
     const mqMobile = window.matchMedia("(max-width: 900px)");
     const mobile = () => mqMobile.matches;
-    const scrollBehav = () => (mobile() ? "auto" : "smooth"); // for scrollTo({ behavior: … }) if you add it
 
     // main column shell, essay stack, chapters vs abstract, progress strip, essay nav accordion
     const shell = document.querySelector(".column-main-inner");
@@ -17,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // scroll container: inner wrapper on mobile (full column scroll), essay column on desktop.
     const scrollRoot = () => (mobile() && shell ? shell : scrollEl || shell);
 
+    /* ——— Progress measurement (denominator for the bar) ——— */
     // cached heights for progress bar (invalidated on resize / font load / layout change)
     let measureCache = { w: -1, full: 0, abstract: 0, sectionHeights: [] };
     const invalidateMeasure = () => {
@@ -44,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // nav targets that should keep the Essay dropdown open when active
     const ESSAY_SUBMENU_NAV = new Set(["part-1", "part-2", "part-3", "part-4", "contacts"]);
 
-    // total scrollable length + per-section heights 
+    // total scrollable length + per-section heights
     function readMeasures() {
         if (!scrollEl) return { full: 1, abstract: 0, sectionHeights: [] };
         const w = scrollEl.clientWidth;
@@ -81,7 +83,10 @@ document.addEventListener("DOMContentLoaded", () => {
         return measureCache;
     }
 
-    // ——— footnotes: DOM placement + visibility (.is-on) ———
+    // wait two frames so layout (e.g. hidden → shown) has settled before measuring.
+    const raf2 = (fn) => requestAnimationFrame(() => requestAnimationFrame(fn));
+
+    /* ——— Footnotes: DOM placement + visibility (.is-on) ——— */
     const noteLinks = document.querySelectorAll(".note-link");
     const ioThresholds = Array.from({ length: 21 }, (_, i) => i / 20);
     const notePlaced = new Map();
@@ -131,24 +136,10 @@ document.addEventListener("DOMContentLoaded", () => {
         setActiveNote(id);
     }
 
-    // hide all refs 
+    // hide all refs
     function clearNotes() {
         document.querySelectorAll(".note").forEach((n) => n.classList.remove("is-on"));
     }
-
-    // inline citation taps: toggle note; mobile also nudges the note into view
-    noteLinks.forEach((link) => {
-        link.addEventListener("click", (e) => {
-            e.preventDefault();
-            const id = link.dataset.noteTarget;
-            if (!id) return;
-            highlightNote(id);
-            const node = document.querySelector(`.note[data-note-id="${id}"]`);
-            if (node && mobile() && node.classList.contains("is-on")) {
-                node.scrollIntoView({ block: "nearest" });
-            }
-        });
-    });
 
     // desktop: IO-driven ref — sticky forward: keep showing a note until a later citation is visible or user clicks
     let noteIo = null;
@@ -248,20 +239,21 @@ document.addEventListener("DOMContentLoaded", () => {
         schedulePick();
     }
 
-    // crossing the breakpoint: remeasure, move footnotes, swap scroll root + IO
-    mqMobile.addEventListener("change", () => {
-        invalidateMeasure();
-        placeNotes();
-        bindScroll();
-        if (mobile()) stopNoteIo();
-        else startNoteIo();
-        scheduleChapter();
+    // inline citation taps: toggle note; mobile also nudges the note into view
+    noteLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const id = link.dataset.noteTarget;
+            if (!id) return;
+            highlightNote(id);
+            const node = document.querySelector(`.note[data-note-id="${id}"]`);
+            if (node && mobile() && node.classList.contains("is-on")) {
+                node.scrollIntoView({ block: "nearest" });
+            }
+        });
     });
 
-    // wait two frames so layout (e.g. hidden → shown) has settled before measuring.
-    const raf2 = (fn) => requestAnimationFrame(() => requestAnimationFrame(fn));
-
-    // ——— Chapters: linear unlock, visible section, nav chrome ———
+    /* ——— Chapters: linear unlock, visible section, nav chrome ——— */
     let unlocked = 0;
     let visibleId = "part-1";
 
@@ -295,27 +287,6 @@ document.addEventListener("DOMContentLoaded", () => {
         requestAnimationFrame(updateBar);
     }
 
-    // essay submenu: aria-expanded + #essay-menu hidden toggle
-    menuToggle?.addEventListener("click", () => {
-        const open = menuToggle.getAttribute("aria-expanded") === "true";
-        menuToggle.setAttribute("aria-expanded", String(!open));
-        if (menuPanel) menuPanel.hidden = open;
-    });
-
-    // “essay” accordion in the nav (numbered items / thank you)
-    function showChapters() {
-        if (!chaptersEl || !chaptersEl.hidden) return;
-        unlocked = 0;
-        visibleId = "part-1";
-        chaptersEl.hidden = false;
-        if (abstractEl) abstractEl.hidden = true;
-        raf2(() => {
-            placeNotes();
-            scheduleChapter();
-            startNoteIo();
-        });
-    }
-
     // data-chapter on <html> drives .is-active on nav buttons
     function setChapter(ch) {
         document.documentElement.dataset.chapter = ch;
@@ -343,6 +314,27 @@ document.addEventListener("DOMContentLoaded", () => {
             const nav = btn.dataset.nav;
             btn.classList.toggle("is-active", nav === ch);
             btn.classList.toggle("is-faded", Boolean(nav && navLocked(nav)));
+        });
+    }
+
+    // essay submenu: aria-expanded + #essay-menu hidden toggle
+    menuToggle?.addEventListener("click", () => {
+        const open = menuToggle.getAttribute("aria-expanded") === "true";
+        menuToggle.setAttribute("aria-expanded", String(!open));
+        if (menuPanel) menuPanel.hidden = open;
+    });
+
+    // “essay” accordion in the nav (numbered items / thank you)
+    function showChapters() {
+        if (!chaptersEl || !chaptersEl.hidden) return;
+        unlocked = 0;
+        visibleId = "part-1";
+        chaptersEl.hidden = false;
+        if (abstractEl) abstractEl.hidden = true;
+        raf2(() => {
+            placeNotes();
+            scheduleChapter();
+            startNoteIo();
         });
     }
 
@@ -423,7 +415,7 @@ document.addEventListener("DOMContentLoaded", () => {
         else if (chaptersEl && !chaptersEl.hidden) setChapter(visibleId);
     }
 
-    // ——— reading progress (vertical bar desktop, horizontal bar mobile) ———
+    /* ——— Reading progress (vertical bar desktop, horizontal bar mobile) ——— */
     function updateBar() {
         if (!progressFill || !scrollEl) return;
         const { full, abstract: absH, sectionHeights } = readMeasures();
@@ -487,7 +479,7 @@ document.addEventListener("DOMContentLoaded", () => {
         placeNotes();
         bindScroll();
         onScroll();
-        if (!mobile()) schedulePick(); 
+        if (!mobile()) schedulePick();
     });
 
     if (shell || scrollEl) onScroll();
@@ -499,6 +491,102 @@ document.addEventListener("DOMContentLoaded", () => {
         onScroll();
     });
 
+    // crossing the breakpoint: remeasure, move footnotes, swap scroll root + IO
+    mqMobile.addEventListener("change", () => {
+        invalidateMeasure();
+        placeNotes();
+        bindScroll();
+        if (mobile()) stopNoteIo();
+        else startNoteIo();
+        scheduleChapter();
+    });
+
+    /* ——— Typography (post-load DOM tweaks) ——— */
+    // tie short words to the following word (nbsp) so they aren’t stranded at line end — main essay + abstract only
+    const SHORT_WORD_TIE =
+        /\b(a|an|and|as|at|but|do|he|her|him|his|i|if|in|is|it|me|my|no|nor|not|of|on|or|so|she|that|the|they|this|to|up|us|we|you|your)\s+/gi;
+
+    function skipTextMutation(el) {
+        if (el?.closest?.(".pull-quote-attrib, .quote-attrib")) return true;
+        let n = el;
+        while (n && n.nodeType === 1) {
+            const t = n.tagName;
+            if (t === "SCRIPT" || t === "STYLE" || t === "CODE" || t === "PRE" || t === "KBD" || t === "SAMP") return true;
+            if (t === "SVG" || n.closest?.("svg")) return true;
+            if (n.classList?.contains("hyphenate-off")) return true;
+            n = n.parentElement;
+        }
+        return false;
+    }
+
+    function tieShortWordsNoOrphan(root) {
+        if (!root) return;
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+            acceptNode(node) {
+                const v = node.nodeValue;
+                if (!v || !/\s/.test(v)) return NodeFilter.FILTER_REJECT;
+                const p = node.parentElement;
+                if (!p || skipTextMutation(p)) return NodeFilter.FILTER_REJECT;
+                return NodeFilter.FILTER_ACCEPT;
+            },
+        });
+        const batch = [];
+        while (walker.nextNode()) batch.push(walker.currentNode);
+        for (const textNode of batch) {
+            if (!textNode.parentNode) continue;
+            const text = textNode.nodeValue;
+            SHORT_WORD_TIE.lastIndex = 0;
+            const next = text.replace(SHORT_WORD_TIE, (match) => match.replace(/\s+$/, "\u00A0"));
+            if (next !== text) textNode.nodeValue = next;
+        }
+    }
+
+    // wrap capitalized words so hyphens: auto won’t break them (CSS can’t select “capital words”)
+    const HYPHEN_CAPITAL_WORD = /\b([A-Z][a-zA-Z'’-]*|[A-Z]{2,})\b/g;
+
+    function wrapCapitalWordsNoHyphen(root) {
+        if (!root) return;
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+            acceptNode(node) {
+                const v = node.nodeValue;
+                if (!v || !/[A-Z]/.test(v)) return NodeFilter.FILTER_REJECT;
+                const p = node.parentElement;
+                if (!p || skipTextMutation(p)) return NodeFilter.FILTER_REJECT;
+                return NodeFilter.FILTER_ACCEPT;
+            },
+        });
+        const batch = [];
+        while (walker.nextNode()) batch.push(walker.currentNode);
+        for (const textNode of batch) {
+            if (!textNode.parentNode) continue;
+            const text = textNode.nodeValue;
+            HYPHEN_CAPITAL_WORD.lastIndex = 0;
+            if (!HYPHEN_CAPITAL_WORD.test(text)) continue;
+            HYPHEN_CAPITAL_WORD.lastIndex = 0;
+            let m;
+            let last = 0;
+            const frag = document.createDocumentFragment();
+            let any = false;
+            while ((m = HYPHEN_CAPITAL_WORD.exec(text)) !== null) {
+                any = true;
+                if (m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+                const span = document.createElement("span");
+                span.className = "hyphenate-off";
+                span.appendChild(document.createTextNode(m[0]));
+                frag.appendChild(span);
+                last = m.index + m[0].length;
+            }
+            if (!any) continue;
+            if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+            textNode.parentNode.replaceChild(frag, textNode);
+        }
+    }
+
+    // Main column copy only — not nav / refs / progress (avoids extra spans in the menu)
+    tieShortWordsNoOrphan(document.getElementById("essay-scroll"));
+    wrapCapitalWordsNoHyphen(document.querySelector(".column-main-inner"));
+
+    /* ——— Initial layout ——— */
     // initial layout: footnote positions, desktop IO, nav active state
     placeNotes();
     startNoteIo();

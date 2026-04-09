@@ -8,14 +8,15 @@
 </head>
 <body>
     <div class="layout">
+
         <div class="column-progress" aria-hidden="true">
             <div class="progress" id="read-progress">
                 <div class="progress-fill"></div>
             </div>
         </div>
 
+
         <nav class="column-navigation" aria-label="Contents">
-            <img src="images/apple-worm.png" alt="" class="nav-worm" width="96" height="96" />
             <p class="nav-title">Contents:</p>
             <ul class="nav-list">
                 <li>
@@ -44,6 +45,7 @@
             </ul>
         </nav>
 
+        <!-- References column: desktop footnotes + figures (hidden on small screens via CSS) -->
         <section class="column-references" id="refs-col" aria-label="References">
             <div class="refs-wrap">
                 <div class="refs-text prose" id="reference-text">
@@ -133,6 +135,7 @@
             </div>
         </section>
 
+        <!-- Main: letterhead, essay scroll, footer -->
         <section class="column-main">
             <div class="column-main-inner prose">
                 <header class="letter-header">
@@ -167,18 +170,27 @@
                 </header>
 
                 <div class="scroll" id="essay-scroll">
+                    <!-- Abstract (hidden when essay chapters are open) -->
                     <div class="abstract" id="abstract-wrap">
                         <section id="intro" class="chapter">
                             <h2 class="ch-head">abstract</h2>
                             <p>
                                 This essay reflects on four years of study at the Royal Academy of Arts, The Hague (KABK), interrogating the gap between the institution's stated mission to produce leaders who "dare to disturb" and foster critical thinking, and the material reality constrained by late capitalism, budget cuts, and institutional pressures. Using Paulo Freire's theoretical framework of banking versus problem-posing education, the author examines their own journey from enthusiasm about KABK's promised liberality to disillusionment with its structural limitations. Through concrete experiences, including the firing of beloved tutors due to budget constraints and the creation of Playdate, a student-run workshop initiative, the essay traces how institutional contradictions become visible to those embedded within them. Drawing on Fred Moten and Stefano Harney's concept of the "undercommons," the author reframes alternative learning spaces not as failures of institutional support but as fugitive zones where genuine critical engagement occurs outside the logic of institutional approval. Ultimately, the essay explores whether meaningful critique and change are possible within institutions while acknowledging the ambivalent position of those who must work both inside and outside their constraints.
                             </p>
+                            <div class="statement-of-originality">
+                                <p class="statement-of-originality__title">Statement of Originality</p>
+                                <p>
+                                    This is to certify that to the best of my knowledge, the content of this thesis is my own work. This thesis has not previously been submitted for any degree or other purposes.
+                                    I certify that the intellectual content of this thesis is the product of my own work and that all the assistance received in preparing this thesis and sources have been acknowledged.
+                                </p>
+                            </div>
                             <div class="ch-next">
                                 <button type="button" class="btn-next" data-next-nav="part-1">Intro&nbsp;→</button>
                             </div>
                         </section>
                     </div>
 
+                    <!-- Essay body: one chapter visible at a time -->
                     <div id="chapters" hidden>
                         <section id="part-1" class="chapter">
                             <h2 class="ch-head">intro</h2>
@@ -237,6 +249,7 @@
                             <p class="pull-quote">
                                 <span class="note-link" data-note-target="note4"><em>"the charisma of the maestro, the kitsch of the star designer, the nostalgia of the craftsman, the pride of the expert and, increasingly, the struggle of the worker, can all converge within design."</em></span>
                             </p>
+                            <p class="quote-attrib">&mdash;Silvio Lorusso, What Design Can&rsquo;t Do</p>
                             <p>
                                 An example often cited as the embodiment of this is Black Mountain College. It is continuously referred to as the ideal liberated art school, echoing in art academies even 100 years later and referenced to me by most of my tutors as an establishing framework of the modern academy. There, artists were not limited to one practice, encouraged to experiment and develop something new, to question. It is often imagined as a kind of educational paradise, in which there is sufficient time, financial freedom, and institutional flexibility to accommodate deeply individual trajectories. Although it’s a beautiful example, the circumstances within which a school like Black Mountain College came to be could not have been more different.
                             </p>
@@ -310,7 +323,7 @@
                         <section id="contacts" class="chapter">
                             <h2 class="ch-head">thank you</h2>
                             <p class="thank-you-friends">
-                                Thank you to Julie Laures, Sasha Vitko and Alessia Campanella. You helped me through this heheh.
+                                Thank you to Julie Laures and Sasha Vitko for the critical eye and belief in this work. And to Alessia Campanella, for always working besides me. ♥
                             </p>
                             <div class="ch-next">
                                 <button type="button" class="btn-prev" data-prev-nav="part-4">←&nbsp;Part&nbsp;4</button>
@@ -339,12 +352,25 @@
                                     Publications, 2024.
                                 </li>
                                 <li>
-                                    Moten, Fred, and Stefano Harney. “The Undercommons: Fugitive Planning &amp; Black Study”.
+                                    Royal Academy of Arts, The Hague. “Mission Statement and Program Description.” KABK,
+                                    (https://www.kabk.nl/en/about/mission-statement).
+                                </li>
+                                <li>
+                                    Calvino, Italo. “Lightness.” <em>Six Memos for the Next Millennium</em>, Harvard University
+                                    Press, 1988.
+                                </li>
+                                <li>Berger, John. <em>Confabulations</em>. Penguin Books Ltd, 2016.</li>
+                                <li>
+                                    hooks, bell. <em>Teaching to Transgress: Education as the Practice of Freedom</em>. Routledge,
+                                    1994.
+                                </li>
+                                <li>
+                                    Moten, Fred, and Stefano Harney. <em>The Undercommons: Fugitive Planning &amp; Black Study</em>.
                                     Minor Compositions, 2013.
                                 </li>
                                 <li>
-                                    Royal Academy of Arts, The Hague. “Mission Statement and Program Description.” KABK,
-                                    (https://www.kabk.nl/en/about/mission-statement).
+                                    Kingsnorth, Paul. “The Language of the Master.” <em>Emergence Magazine</em>, 8 May 2019,
+                                    emergencemagazine.org/essay/the-language-of-the-master/.
                                 </li>
                             </ol>
                             <div class="ch-next">
@@ -370,7 +396,7 @@
                         </div>
                         <div class="letter-header-pair">
                             <span class="letter-header-label">Date</span>
-                            <div class="letter-header-value">April 9th, <br> 2026</div>
+                            <div class="letter-header-value">April 8th, <br> 2026</div>
                         </div>
                     </div>
                 </footer>
