@@ -1,5 +1,3 @@
-/* dear art school — fonts → tokens → layout → main → chapters → media */
-
 @font-face {
     font-family: "Kommuna Normal";
     src: url("fonts/KommunaNormal1.10.otf") format("opentype");
@@ -435,9 +433,9 @@ em { font-family: inherit; font-style: normal; }
     grid-column: 1;
     width: 100%;
     max-width: 40rem;
-    margin-inline: auto;
+    margin-inline: 0;
     margin-block: 1.35em;
-    padding-inline: 0.75rem;
+    padding-inline: 0;
     box-sizing: border-box;
     text-align: center;
     color: var(--accent);
@@ -1067,6 +1065,11 @@ hr.letter-header-rule {
     #intro p {
         font-size: calc(var(--abstract) * 0.92);
         line-height: 1.32;
+    }
+
+    .abstract #intro > .statement-of-originality {
+        margin-inline: auto;
+        padding-inline: 0.75rem;
     }
 
     /* footnotes moved under paragraphs */
