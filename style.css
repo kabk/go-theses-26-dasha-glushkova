@@ -1,3 +1,5 @@
+/* dear art school — fonts → tokens → layout → main → chapters → media */
+
 @font-face {
     font-family: "Kommuna Normal";
     src: url("fonts/KommunaNormal1.10.otf") format("opentype");
@@ -22,6 +24,8 @@
     font-display: swap;
 }
 
+/* the base */
+
 :root {
     --microtype: 0.8rem;
     --microtype-line-height: 1.2;
@@ -45,12 +49,9 @@
     --letter-label-w: 11ch;
     --progress-h: 8px;
     --progress-w: 11px;
-    /* Fixed column for vertical .ch-head — avoids Chrome/Safari max-content disagreements */
-    --ch-head-rail: 2.5rem;
-    /* Vertical upright titles: Safari mostly uses letter-spacing along the stack, not line-height */
+    --ch-head-rail: 2.5rem; 
     --ch-head-stack-gap: 0.32em;
     --ch-head-line-height: 2;
-    /* Nudge vertical chapter titles toward the right (main column rail) */
     --ch-head-shift: 0.35rem;
     --accent: #e9008d;
     --ink: #000000;
@@ -61,6 +62,8 @@
     --font-body: "Kommuna Normal", "Times New Roman", Times, serif;
     --font-ref: "National Park", "Kommuna Normal", "Times New Roman", Times, serif;
 }
+
+/* reset */
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -76,7 +79,8 @@ body {
 
 em { font-family: inherit; font-style: normal; }
 
-/* ——— layout: progress | nav | refs | main ——— */
+/* page grid, 4 columns */
+
 .layout {
     display: grid;
     grid-template-columns: var(--progress-w) minmax(8.75rem, 10.75rem) minmax(14rem, 22vw) minmax(0, 1fr);
@@ -93,6 +97,8 @@ em { font-family: inherit; font-style: normal; }
     height: 100vh;
     min-height: 0;
 }
+
+/* progress bar */
 
 .column-progress { background: color-mix(in srgb, var(--ink) 8%, var(--paper)); }
 
@@ -125,13 +131,7 @@ em { font-family: inherit; font-style: normal; }
     line-height: var(--nav-line-height);
 }
 
-.nav-worm {
-    display: block;
-    width: 5.25rem;
-    max-width: 100%;
-    height: auto;
-    margin: 0 auto 0.65rem;
-}
+/* side navigation — list, essay accordion, .nav-btn states */
 
 .nav-title {
     margin: 0 0 0.35rem;
@@ -195,6 +195,8 @@ em { font-family: inherit; font-style: normal; }
 
 .nav-sub li { margin-bottom: 0.1rem; }
 
+/* references column — shell (desktop only; hidden on mobile) */
+
 .column-references {
     position: relative;
     z-index: 0;
@@ -202,6 +204,8 @@ em { font-family: inherit; font-style: normal; }
     border-right: var(--border-vertical);
     min-height: 0;
 }
+
+/* reference content */
 
 .refs-wrap {
     display: flex;
@@ -232,6 +236,8 @@ em { font-family: inherit; font-style: normal; }
 .refs-wrap:not(:has(.refs-text .note.is-on)) .refs-pics:has(.note.is-on) {
     padding-top: 0.6rem;
 }
+
+/* scrollbars hidden */
 
 .refs-wrap::-webkit-scrollbar,
 .refs-text::-webkit-scrollbar,
@@ -266,7 +272,6 @@ em { font-family: inherit; font-style: normal; }
 }
 
 .refs-pics img { background: var(--paper); }
-
 
 .refs-text .ref-quote,
 .column-main .note .ref-quote {
@@ -331,7 +336,8 @@ em { font-family: inherit; font-style: normal; }
 .refs-pics .ref-cap { font-family: var(--font-body); color: var(--ink); }
 .column-main .note .ref-cap { font-family: var(--font-ref); }
 
-/* ——— main column ——— */
+/* main column — inner flex shell, #essay-scroll */
+
 .column-main {
     position: relative;
     z-index: 1;
@@ -399,6 +405,8 @@ em { font-family: inherit; font-style: normal; }
     text-underline-offset: 0.12em;
 }
 
+/* abstract */
+
 .abstract[hidden] { display: none !important; }
 
 .abstract {
@@ -416,13 +424,12 @@ em { font-family: inherit; font-style: normal; }
     min-width: 0;
 }
 
+.abstract #intro > :is(p, .ch-next) { grid-column: 1; }
+
 .abstract #intro > p {
-    grid-column: 1;
     margin: 0;
     max-width: 40rem;
 }
-
-.abstract #intro > .ch-next { grid-column: 1; }
 
 .abstract #intro > .statement-of-originality {
     grid-column: 1;
@@ -492,13 +499,19 @@ em { font-family: inherit; font-style: normal; }
     font-size: var(--abstract);
 }
 
+/* letterhead & footer */
+
+.letter-header,
+.footer {
+    flex-shrink: 0;
+    z-index: 3;
+    margin: 0 calc(-1 * var(--pad-x));
+    background: var(--paper);
+}
+
 .letter-header {
     position: relative;
-    z-index: 3;
-    flex-shrink: 0;
-    margin: 0 calc(-1 * var(--pad-x));
     padding: 0.75rem var(--pad-x) 0;
-    background: var(--paper);
 }
 
 .letter-header-row {
@@ -568,11 +581,7 @@ hr.letter-header-rule {
 }
 
 .footer {
-    flex-shrink: 0;
-    z-index: 3;
-    margin: 0 calc(-1 * var(--pad-x));
     padding: 0 var(--pad-x) 1rem;
-    background: var(--paper);
 }
 
 .footer .letter-header-rule {
@@ -604,7 +613,8 @@ hr.letter-header-rule {
     object-fit: contain;
 }
 
-/* chapters + abstract intro grid */
+/* chapters */
+
 #chapters .chapter,
 .abstract #intro {
     display: grid;
@@ -634,7 +644,6 @@ hr.letter-header-rule {
     text-orientation: upright;
     line-height: var(--ch-head-line-height);
     letter-spacing: var(--ch-head-stack-gap);
-    /* Space between words (“thank you”, “part 1”) on the vertical inline axis */
     word-spacing: 0.35em;
     font-size: var(--microtype);
     font-weight: 400;
@@ -649,7 +658,6 @@ hr.letter-header-rule {
 
 .ch-next {
     display: grid;
-    /* minmax(0, 1fr) keeps the prev/next row from forcing horizontal overflow */
     grid-template-columns: minmax(0, 1fr) minmax(0, max-content);
     align-items: baseline;
     column-gap: 1rem;
@@ -726,7 +734,6 @@ hr.letter-header-rule {
 
 .column-main .scroll .note-link {
     font-size: calc(var(--note-quote-scale) * 1em);
-    /* inline-block + max-width caused a wide box and a gap before the following word */
     display: inline;
     max-width: none;
     line-height: inherit;
@@ -736,12 +743,16 @@ hr.letter-header-rule {
 .note-link:hover,
 .note-link:focus-visible { text-decoration-style: solid; }
 
+/* desktop — wider chapter column gap; nav offset */
+
 @media (min-width: 901px) {
     #chapters .chapter,
     .abstract #intro { column-gap: 2.45rem; }
 
     .column-navigation { margin-left: 0.85rem; }
 }
+
+/* mobile */
 
 @media (max-width: 900px) {
     html, body { height: auto; min-height: 100%; }
@@ -756,6 +767,7 @@ hr.letter-header-rule {
         --letter-shift: 0.5rem;
     }
 
+    /* progress bar (top) */
     .column-progress {
         order: -1;
         width: 100%;
@@ -774,8 +786,7 @@ hr.letter-header-rule {
         width: 0;
     }
 
-    .column-main { order: 1; }
-
+    /* bottom nav row */
     .column-navigation {
         order: 2;
         width: 100%;
@@ -814,7 +825,9 @@ hr.letter-header-rule {
         min-height: 0;
     }
 
+    /* main: scroll root */
     .column-main {
+        order: 1;
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -824,7 +837,6 @@ hr.letter-header-rule {
         --progress-h: 6px;
         --body: 1.16rem;
         --abstract: 1.06rem;
-        /* Match side padding to nav/footer so chapter nav isn’t glued to the screen edge */
         --body-inset: 1rem;
     }
 
@@ -833,7 +845,6 @@ hr.letter-header-rule {
         min-height: 0;
         overflow-y: auto;
         overflow-x: hidden;
-        /* Slightly narrower side padding than nav — widens letter + essay column only */
         --pad-x-m: 6px;
         padding: 0 var(--pad-x-m) env(safe-area-inset-bottom, 0);
         --rule-inset: 18px;
@@ -845,6 +856,7 @@ hr.letter-header-rule {
         overflow: visible;
     }
 
+    /* sticky letterhead + footer */
     .letter-header {
         position: sticky;
         top: 0;
@@ -855,7 +867,6 @@ hr.letter-header-rule {
         box-sizing: border-box;
     }
 
-    /* Stack was padded for desktop alignment; on narrow screens it clips the right column */
     .letter-header-row {
         margin-left: var(--letter-shift);
         min-width: 0;
@@ -877,7 +888,6 @@ hr.letter-header-rule {
         grid-template-columns: minmax(2.15em, max-content) minmax(0, 1fr);
     }
 
-    /* Tighter label ↔ value gap; narrower label column frees space for values */
     .letter-header .letter-header-pair {
         column-gap: 0.2rem;
         grid-template-columns: minmax(2.15em, max-content) minmax(0, 1fr);
@@ -886,7 +896,6 @@ hr.letter-header-rule {
     .letter-header .letter-header-value {
         overflow-wrap: break-word;
     }
-
 
     .letter-header .letter-header-value a:any-link {
         white-space: nowrap;
@@ -902,12 +911,15 @@ hr.letter-header-rule {
 
     .footer .footer-content {
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        justify-items: start;
+        justify-items: stretch;
     }
 
     .footer .footer-content > .letter-header-pair {
         grid-template-columns: minmax(2.15em, max-content) minmax(0, 1fr);
         column-gap: 0.2rem;
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
     }
 
     .footer .footer-content > .letter-header-pair:last-child {
@@ -930,9 +942,7 @@ hr.letter-header-rule {
 
     .footer-content { margin-left: var(--letter-shift); }
 
-    .nav-worm { display: none; }
-
-
+    /* nav: wrap row, essay + submenu, small type */
     .column-navigation .nav-title {
         display: none;
     }
@@ -975,7 +985,6 @@ hr.letter-header-rule {
         padding: 0;
     }
 
-    /* Explicit px + full font reset — base `font: inherit` was fighting rem-based sizes */
     .column-navigation .nav-btn,
     .column-navigation .nav-toggle {
         font-family: var(--font-body);
@@ -986,9 +995,13 @@ hr.letter-header-rule {
         letter-spacing: var(--microtype-letter-spacing);
     }
 
-    .nav-btn {
+    .nav-btn,
+    .nav-toggle {
         width: auto;
         white-space: nowrap;
+    }
+
+    .nav-btn {
         padding: 0.15rem 0;
     }
 
@@ -996,11 +1009,7 @@ hr.letter-header-rule {
         font-size: 9px;
     }
 
-    .nav-toggle {
-        width: auto;
-        white-space: nowrap;
-    }
-
+    /* one-column chapters */
     #chapters .chapter,
     .abstract #intro {
         grid-template-columns: minmax(0, 1fr) !important;
@@ -1037,7 +1046,6 @@ hr.letter-header-rule {
         max-width: 100%;
         min-width: 0;
         margin-right: 0;
-        /* Extra inset for the “next” control so it doesn’t sit on the viewport edge */
         padding-inline-end: 0.35rem;
         column-gap: min(1rem, 4vw);
     }
@@ -1047,10 +1055,9 @@ hr.letter-header-rule {
         line-height: 1.32;
     }
 
+    /* footnotes moved under paragraphs */
     .column-main .note {
         margin: 0.85rem 0;
-        margin-left: 0;
-        margin-right: 0;
         padding: 0;
         background: transparent;
         font-family: var(--font-body);
