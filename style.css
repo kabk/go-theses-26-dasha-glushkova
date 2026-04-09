@@ -377,6 +377,7 @@ em { font-family: inherit; font-style: normal; }
 }
 
 .column-main .scroll .chapter > p.pull-quote {
+    font-family: var(--font-body);
     text-align: center;
     text-indent: 0;
     max-width: 100%;
@@ -422,6 +423,40 @@ em { font-family: inherit; font-style: normal; }
 }
 
 .abstract #intro > .ch-next { grid-column: 1; }
+
+.abstract #intro > .statement-of-originality {
+    grid-column: 1;
+    width: 100%;
+    max-width: 40rem;
+    margin-inline: auto;
+    margin-block: 1.35em;
+    padding-inline: 0.75rem;
+    box-sizing: border-box;
+    text-align: center;
+    color: var(--accent);
+}
+
+.abstract #intro .statement-of-originality p {
+    margin: 0;
+    text-indent: 0 !important;
+    text-align: center;
+    hyphens: none;
+    font-family: var(--font-body);
+    font-size: calc(var(--abstract) * 0.82);
+    line-height: var(--pull-quote-line-height);
+    text-transform: none;
+}
+
+.abstract #intro .statement-of-originality__title {
+    margin-bottom: 0.55em;
+    font-size: calc(var(--abstract) * 0.88);
+    font-weight: 400;
+    letter-spacing: var(--microtype-letter-spacing);
+}
+
+.abstract #intro .statement-of-originality p + p {
+    margin-top: 0.65em;
+}
 
 #intro { padding-top: 0; }
 
@@ -866,7 +901,7 @@ hr.letter-header-rule {
     }
 
     .footer .footer-content {
-        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         justify-items: start;
     }
 
