@@ -912,6 +912,9 @@ hr.letter-header-rule {
     .footer .footer-content {
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         justify-items: stretch;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
     }
 
     .footer .footer-content > .letter-header-pair {
@@ -920,6 +923,14 @@ hr.letter-header-rule {
         width: 100%;
         min-width: 0;
         box-sizing: border-box;
+    }
+
+    .footer .footer-content > .letter-header-pair:first-child .letter-header-value {
+        min-width: 0;
+    }
+
+    .footer .footer-content > .letter-header-pair:first-child .letter-header-value.is-plain img {
+        max-width: 100%;
     }
 
     .footer .footer-content > .letter-header-pair:last-child {
@@ -936,6 +947,9 @@ hr.letter-header-rule {
         z-index: 5;
         margin: 0 calc(-1 * var(--pad-x-m));
         padding: 0 var(--pad-x-m) 1rem;
+        min-width: 0;
+        overflow-x: clip;
+        box-sizing: border-box;
     }
 
     .footer .letter-header-rule { margin-bottom: 0.75rem; }
