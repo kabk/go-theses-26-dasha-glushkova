@@ -745,13 +745,14 @@ hr.letter-header-rule {
         min-height: 0;
         border-right: none;
         --rule-inset: 12px;
+        --nav-font: max(0.45rem, calc(var(--microtype) * 0.62));
         position: relative;
         display: grid;
         grid-template-columns: auto minmax(0, 1fr);
         align-items: center;
         column-gap: 0.2rem;
-        row-gap: 0.35rem;
-        padding: 0.75rem var(--pad-x-m) 0.85rem calc(var(--pad-x-m) + var(--letter-shift));
+        row-gap: 0.28rem;
+        padding: 0.55rem var(--pad-x-m) 0.65rem calc(var(--pad-x-m) + var(--letter-shift));
         border-bottom: none;
     }
 
@@ -834,18 +835,39 @@ hr.letter-header-rule {
     }
 
     .letter-header-stack .letter-header-pair {
-        grid-template-columns: minmax(3.25em, max-content) minmax(0, 1fr);
+        grid-template-columns: minmax(2.15em, max-content) minmax(0, 1fr);
+    }
+
+    /* Tighter label ↔ value gap; narrower label column frees space for values */
+    .letter-header .letter-header-pair {
+        column-gap: 0.2rem;
+        grid-template-columns: minmax(2.15em, max-content) minmax(0, 1fr);
     }
 
     .letter-header .letter-header-value {
         overflow-wrap: break-word;
     }
 
-    /* Meta letterhead: compact type so From/To/Subject fit narrow screens */
+
+    .letter-header .letter-header-value a:any-link {
+        white-space: nowrap;
+        letter-spacing: 0.015em;
+    }
     .letter-header .letter-header-row,
     .footer .footer-content {
         font-size: max(0.5rem, calc(var(--microtype) * 0.72));
         line-height: 1.05;
+        column-gap: 0.65rem;
+        row-gap: 0.65rem;
+    }
+
+    .footer .footer-content > .letter-header-pair {
+        grid-template-columns: minmax(2.15em, max-content) minmax(0, 1fr);
+        column-gap: 0.2rem;
+    }
+
+    .footer .footer-content > .letter-header-pair:last-child {
+        padding-left: 0;
     }
 
     .footer {
@@ -876,7 +898,7 @@ hr.letter-header-rule {
         flex-wrap: wrap;
         justify-content: flex-start;
         align-items: center;
-        gap: 0.25rem 0.45rem;
+        gap: 0.18rem 0.28rem;
         width: 100%;
         min-width: 0;
         margin: 0;
@@ -894,13 +916,8 @@ hr.letter-header-rule {
         flex-direction: row;
         flex-wrap: wrap;
         align-items: center;
-        gap: 0.25rem 0.5rem;
+        gap: 0.18rem 0.3rem;
         min-width: 0;
-    }
-
-    .nav-toggle {
-        width: auto;
-        white-space: nowrap;
     }
 
     .nav-sub:not([hidden]) {
@@ -908,16 +925,30 @@ hr.letter-header-rule {
         flex-direction: row;
         flex-wrap: wrap;
         align-items: center;
-        gap: 0.2rem 0.45rem;
+        gap: 0.15rem 0.28rem;
         margin: 0;
         padding: 0;
+    }
+
+    .column-navigation .nav-title {
+        font-size: var(--nav-font);
     }
 
     .nav-btn {
         width: auto;
         white-space: nowrap;
-        font-size: max(0.58rem, var(--microtype));
-        padding: 0.28rem 0;
+        font-size: var(--nav-font);
+        padding: 0.2rem 0;
+    }
+
+    .column-navigation .nav-btn.is-sub {
+        font-size: max(0.4rem, calc(var(--nav-font) * 0.9));
+    }
+
+    .nav-toggle {
+        width: auto;
+        white-space: nowrap;
+        font-size: var(--nav-font);
     }
 
     #chapters .chapter,
