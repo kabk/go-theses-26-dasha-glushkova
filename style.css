@@ -970,8 +970,26 @@ hr.letter-header-rule {
 
     #chapters .chapter,
     .abstract #intro {
-        --ch-head-rail: 2.2rem;
-        column-gap: 0.9rem;
+        grid-template-columns: minmax(0, 1fr);
+        column-gap: 0;
+        row-gap: 0;
+    }
+
+    #chapters .chapter > .ch-head,
+    .abstract #intro .ch-head {
+        grid-column: 1;
+        grid-row: auto;
+        writing-mode: horizontal-tb;
+        text-orientation: mixed;
+        justify-self: start;
+        align-self: start;
+        width: 100%;
+        max-width: none;
+        line-height: var(--microtype-line-height);
+        letter-spacing: var(--microtype-letter-spacing);
+        word-spacing: normal;
+        position: static;
+        padding: 0 0 0.65rem;
     }
 
     .column-main .note {
