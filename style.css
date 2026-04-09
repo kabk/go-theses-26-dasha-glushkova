@@ -50,6 +50,8 @@
     /* Vertical upright titles: Safari mostly uses letter-spacing along the stack, not line-height */
     --ch-head-stack-gap: 0.32em;
     --ch-head-line-height: 2;
+    /* Nudge vertical chapter titles toward the right (main column rail) */
+    --ch-head-shift: 0.35rem;
     --accent: #e9008d;
     --ink: #000000;
     --paper: #ffffff;
@@ -589,6 +591,7 @@ hr.letter-header-rule {
     z-index: 2;
     margin: 0;
     padding: 0;
+    transform: translateX(var(--ch-head-shift));
     box-sizing: border-box;
     width: 100%;
     max-width: 100%;
@@ -782,7 +785,7 @@ hr.letter-header-rule {
         --progress-h: 6px;
         --body: 1.16rem;
         --abstract: 1.06rem;
-        --body-inset: 1.65rem;
+        --body-inset: 1.1rem;
     }
 
     .column-main-inner {
@@ -791,7 +794,7 @@ hr.letter-header-rule {
         overflow-y: auto;
         overflow-x: hidden;
         /* Slightly narrower side padding than nav — widens letter + essay column only */
-        --pad-x-m: 12px;
+        --pad-x-m: 10px;
         padding: 0 var(--pad-x-m) env(safe-area-inset-bottom, 0);
         --rule-inset: 18px;
     }
@@ -827,6 +830,7 @@ hr.letter-header-rule {
 
     .letter-header-stack {
         padding-left: 0;
+        gap: 0.65rem;
     }
 
     .letter-header-stack .letter-header-pair {
@@ -835,6 +839,13 @@ hr.letter-header-rule {
 
     .letter-header .letter-header-value {
         overflow-wrap: break-word;
+    }
+
+    /* Meta letterhead: slightly smaller so two-column header fits narrow screens */
+    .letter-header .letter-header-row,
+    .footer .footer-content {
+        font-size: max(0.62rem, calc(var(--microtype) * 0.88));
+        line-height: 1.12;
     }
 
     .footer {
@@ -911,8 +922,38 @@ hr.letter-header-rule {
 
     #chapters .chapter,
     .abstract #intro {
-        --ch-head-rail: 2.2rem;
-        column-gap: 0.9rem;
+        grid-template-columns: minmax(0, 1fr);
+        column-gap: 0;
+    }
+
+    #chapters .chapter > .ch-head,
+    .abstract #intro .ch-head {
+        grid-column: 1;
+        grid-row: auto;
+        justify-self: start;
+        align-self: start;
+        position: static;
+        z-index: auto;
+        transform: none;
+        width: auto;
+        max-width: none;
+        writing-mode: horizontal-tb;
+        text-orientation: mixed;
+        line-height: var(--microtype-line-height);
+        letter-spacing: 0.12em;
+        word-spacing: normal;
+        padding: 0 0 0.4rem;
+        margin: 0 0 0.2rem;
+    }
+
+    .ch-next {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    #intro p {
+        font-size: calc(var(--abstract) * 0.92);
+        line-height: 1.32;
     }
 
     .column-main .note {
